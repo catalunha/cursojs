@@ -1,6 +1,6 @@
-// form -> seleciona pela tag
-// .form -> seleciona pela class
-// #form -> seleciona pelo id
+// form -> document.querySelector seleciona pela tag
+// .form -> document.querySelector seleciona pela class
+// #form -> document.querySelector seleciona pelo id
 function main() {
     const form = document.querySelector('.form');
     const resultado = document.querySelector('.resultado');
