@@ -4,7 +4,11 @@ https://www.udemy.com/course/curso-de-javascript-moderno-do-basico-ao-avancado/l
 # Cmds
 $ npm init
 
-$ npm install --save-dev @babel/cli @babel/preset-env @babel/core babel-loader webpack webpack-cli regenerator-runtime core-js@2
+//em dev dependencies
+$ npm install --save-dev @babel/cli @babel/preset-env @babel/core babel-loader webpack webpack-cli
+
+//em dependencies
+$ npm install core-js regenerator-runtime
 
 // editar webpack.config.js
 
