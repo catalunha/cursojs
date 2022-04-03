@@ -1,0 +1,1 @@
+{"version":3,"file":"bundle.js","mappings":";;;;;AAAAA,OAAO,CAACC,GAAR,CAAY,YAAZ,E","sources":["webpack://aula052/./src/index.js"],"sourcesContent":["console.log('eeirieirie')"],"names":["console","log"],"sourceRoot":""}
