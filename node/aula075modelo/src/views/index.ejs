@@ -1,0 +1,23 @@
+
+
+
+<%- include('includes/head')%>
+<body>
+
+  <section class="container">
+Olá..
+<%= titulo %> <br>
+<%= umaVarLocal %> <br>
+<%- titulo %>
+<% if(typeof titulo !== 'undefined'){%>
+  <br>Mostrando valor se titulo presente.
+<%}%>
+<% for(const i of numeros){%>
+  <br>Numero: <%=i%>.
+<%}%>
+  </section>
+
+  <script src="./assets/js/bundle.js"></script>
+</body>
+
+</html>
