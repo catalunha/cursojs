@@ -14,6 +14,23 @@ class Login {
     this.erros = [];
     this.user = null;
   }
+  async login() {
+    this.valida();
+    if (this.erros.length > 0) {
+      return;
+    }
+    this.user = await LoginModel.findOne({ email: this.body.email });
+    if (!this.user) {
+      this.erros.push('Usuário não existe');
+      this.user=null;
+      return;
+    }
+    if (!bcryptjs.compareSync(this.body.password, this.user.password)) {
+      this.erros.push('Senha nao confere');
+      this.user=null;
+      return;
+    }
+  }
   async register() {
     this.valida();
     if (this.erros.length > 0) {
@@ -23,20 +40,17 @@ class Login {
     if (this.erros.length > 0) {
       return;
     }
-    try {
-      const salt = bcryptjs.genSaltSync();
-      this.body.password = bcryptjs.hashSync(this.body.password, salt);
-      this.user = await LoginModel.create(this.body);
-    } catch (error) {
-      console.log('error = ', error);
-    }
+    const salt = bcryptjs.genSaltSync();
+    this.body.password = bcryptjs.hashSync(this.body.password, salt);
+    this.user = await LoginModel.create(this.body);
   }
   async userExists() {
-    const user = await LoginModel.findOne({ email: this.body.email });
-    if (user) {
+    this.user = await LoginModel.findOne({ email: this.body.email });
+    if (this.user) {
       console.log('usuario ja existe');
       this.erros.push('Usuario já existe');
     }
+
   }
   valida() {
     this.cleanUp();
