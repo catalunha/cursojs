@@ -80,3 +80,149 @@ catalunha@cursojs:~$ sudo apt upgrade
 
 
 ```
+
+
+# organizando os gits
+
+## Servidor - etapa 1
+```
+catalunha@cursojs:~/repo-contatos$ git init --bare
+Initialized empty Git repository in /home/catalunha/repo-contatos/
+catalunha@cursojs:~/repo-contatos$ cd ..
+catalunha@cursojs:~$ cd contatos/
+catalunha@cursojs:~/contatos$ git init
+Initialized empty Git repository in /home/catalunha/contatos/.git/
+catalunha@cursojs:~/contatos$ git remote add contatos /home/catalunha/repo-contatos/
+
+```
+
+## Local - etapa 1
+```
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ git init
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ nano .gitignore
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ git add .
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ git commit -am 'commit inicial'
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ git remote add contatos 34.95.224.209:repo-contatos
+catalunha@pop-os:~/myapp/cursojs_aula076_contatos$ git push contatos master
+
+```
+
+## Servidor - etapa 2
+```
+catalunha@cursojs:~/contatos$ git pull contatos master
+```
+# instalando node
+A versao nativa do ubuntu 18 é
+v8.10.0
+E nao funciona algumas coisas do 12 então use os comando abaixo.
+Assim fica os dois nodes local e remoto iguais.
+
+```
+sudo apt install curl -y
+curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+sudo apt install nodejs -y
+```
+
+# instalando o pm2
+$ sudo npm install -g pm2
+
+catalunha@cursojs:~/contatos$ pm2 start /home/catalunha/contatos/server.js --name AppContatos
+
+
+$ pm2 list
+
+
+$ pm2 start AppContatos
+
+$ pm2 stop AppContatos
+
+//reiniciar o app no servidor caso ele seja reiniciado.
+//apenas de o comando abaixo
+catalunha@cursojs:~/contatos$ pm2 startup
+[PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u catalunha --hp /home/catalunha
+catalunha@cursojs:~/contatos$ 
+
+//depois copie as linha pedida no terminal. como abaixo
+```
+catalunha@cursojs:~/contatos$ sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u catalunha --hp /home/catalunha
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=catalunha
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/catalunha/.pm2
+PIDFile=/home/catalunha/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-catalunha.service
+Command list
+[ 'systemctl enable pm2-catalunha' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-catalunha.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-catalunha...
+Created symlink /etc/systemd/system/multi-user.target.wants/pm2-catalunha.service → /etc/systemd/system/pm2-catalunha.service.
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+catalunha@cursojs:~/contatos$ 
+
+```
+
+# instalando nginx
+
+$ sudo apt install nginx
+
+$ sudo systemctl status nginx
+
+Testando se o nginx esta funcionando
+http://34.95.224.209/
+
+Copiar este arquivo nginx-HTTP-meu.txt para este arquivo e outras açoes a seguir: 
+```
+catalunha@cursojs:~$ sudo nano /etc/nginx/sites-enabled/app-contatos
+catalunha@cursojs:~$ cd /etc/nginx/sites-enabled/
+catalunha@cursojs:/etc/nginx/sites-enabled$ ls
+app-contatos  default
+catalunha@cursojs:/etc/nginx/sites-enabled$ sudo mv default default_old
+catalunha@cursojs:/etc/nginx/sites-enabled$ ls
+app-contatos  default_old
+catalunha@cursojs:/etc/nginx/sites-enabled$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+catalunha@cursojs:/etc/nginx/sites-enabled$ sudo systemctl restart nginx
+
+```
+
+Fase 0.0.0.0.0.0.1: Ok...
+Servidor em nodejs
+http://34.95.224.209/
+Valeu a caminhada. Obrigado pela sua ajuda. E ainda vou precisar muuuito.
+Creio que ja tenha andado 1 mm na maratona.
+Agora é partir para a fase 0.0.0.0.0.0.2 😂🤪
+Mas já muito grato a vc pela atenção (vou precisar mais)
+E grato a Deus tb 🙌🙏🙇‍♂️🙇‍♂️🙇‍♂️
+
