@@ -1,3 +1,23 @@
+# Ações basicas para reiniciar programação no dia seguinte
+
+## Open terminal para logar no servidor
+catalunha@pop-os:~$ ssh catalunha@34.95.224.209
+
+## Open terminal para conectar ao mariaDB
+catalunha@pop-os:~$ mysql -h 34.95.224.209 -P 3306 -u root -p
+Enter password: ctn_mariadb_srv_gcp
+
+Acessando DB
+use escola;
+
+## rodando server em localhost
+Executar o nodemon para pegar a atualizações de edição e transpilar com o sucrase de um js moderno para um js mais old.
+catalunha@pop-os:~/myapp/cursojs/node/aula079api$ npm run dev
+
+## acessando a api em nuvem
+
+
+
 # instalando o editor config no vs code
 Para controlar padrao de edição
  veja arquivo .editorconfig
@@ -74,7 +94,24 @@ classes e funcoes construtoraas começam com letra maiuscula.
 $ npm install dotenv
 ```
 
+conteúdo do dotenv
+```
+DATABASE=escola
+DATABASE_HOST=34.95.224.209
+DATABASE_PORT=3306
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=ctn_mariadb_srv_gcp
+
+TOKEN_SECRET=hash_token_secret
+TOKEN_EXPIRATION=7d
+```
+
 # Ações no database
+conectando ao mariaDB
+catalunha@pop-os:~$ mysql -h 34.95.224.209 -P 3306 -u root -p
+Enter password: ctn_mariadb_srv_gcp
+
+
 instalar pacote do mariadb
 ```
 $ npm install mariadb
@@ -162,14 +199,14 @@ $ npm install bcryptjs
 
 
 # nome padrao dos methods
-cruld| nomes rest | metodos | descrição
+CCRULD| GPDPP nomes rest | metodos | descrição
 ---|---|---|---
-create |post| create/store | cria um novo usuario
-read |get/:id| show | mostra um usuario
-list | get |index | lista todos os usuarios
-delete |delete| delete | apagar usuario
-update |put/:id| update | troca o objeto inteiro
-update |patch/:id| update | altera um valor pontual
+create |post| create | cria um novo usuario
+list | get |list | lista todos os usuarios
+read |get/:id| read | mostra um usuario
+delete |delete/:id| delete | apagar usuario
+change |put/:id| change | troca o objeto inteiro
+update |patch/:id| update | altera alguns valores
 
 
 
@@ -179,3 +216,137 @@ update |patch/:id| update | altera um valor pontual
 ```
 $ npm install jsonwebtoken
 ```
+
+
+# update gitignore
+git rm -r --cached .
+git add .
+git commit -am "Remove ignored files"
+
+
+
+
+# trabalhando com seeds
+```
+$ npx sequelize seed:generate --name criar-usuarios
+```
+apos editar o seeds em src/database/seeds/20220408130510-criar-usuarios.js
+
+vamos mandar executar com
+
+```
+$ npx sequelize db:seed:all
+```
+codigos q nao deram certo no seed
+```
+const bcryptjs = require('bcryptjs');
+
+module.exports = {
+  up: async (queryInterface) => queryInterface.bulkInsert('users', [
+    {
+      nome: 'a',
+      email: 'a@gmail.com',
+      password_hash: bcryptjs.hash('123456', 8),
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+    {
+      nome: 'b',
+      email: 'b@gmail.com',
+      password_hash: bcryptjs.hash('123456', 8),
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  ], {}),
+
+  down: () => {},
+};
+
+// old
+
+// const bcryptjs = require('bcryptjs');
+
+// module.exports = {
+//   async up(queryInterface) {
+//     await queryInterface.bulkInsert('users', [
+//       {
+//         nome: 'a',
+//         email: 'a@gmail.com',
+//         password_hash: bcryptjs.hash('123456', 8),
+//         created_at: new Date(),
+//         updated_at: new Date(),
+//       },
+//       {
+//         nome: 'b',
+//         email: 'b@gmail.com',
+//         password_hash: bcryptjs.hash('123456', 8),
+//         created_at: new Date(),
+//         updated_at: new Date(),
+//       },
+//     ], {});
+//   },
+
+//   async down(queryInterface) {
+//     await queryInterface.dropTable('users');
+//   },
+// };
+```
+O seed nao deu certo esta com este erro:
+```
+catalunha@pop-os:~/myapp/cursojs/node/aula079api$ npx sequelize db:seed:all --debug
+
+Sequelize CLI [Node: 12.22.5, CLI: 6.4.1, ORM: 6.18.0]
+
+Loaded configuration file "src/config/database.js".
+== 20220408133720-criar-usuarios: migrating =======
+
+ERROR: Error: Invalid value Promise { <pending> }
+    at Object.escape (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/sequelize/lib/sql-string.js:52:11)
+    at MariaDBQueryGenerator.escape (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/sequelize/lib/dialects/abstract/query-generator.js:709:22)
+    at /home/catalunha/myapp/cursojs/node/aula079api/node_modules/sequelize/lib/dialects/abstract/query-generator.js:233:21
+    at Array.map (<anonymous>)
+    at MariaDBQueryGenerator.bulkInsertQuery (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/sequelize/lib/dialects/abstract/query-generator.js:229:36)
+    at MySQLQueryInterface.bulkInsert (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/sequelize/lib/dialects/abstract/query-interface.js:335:68)
+    at Object.up (/home/catalunha/myapp/cursojs/node/aula079api/src/database/seeds/20220408133720-criar-usuarios.js:5:26)
+    at /home/catalunha/myapp/cursojs/node/aula079api/node_modules/umzug/lib/migration.js:132:33
+    at Generator.next (<anonymous>)
+    at asyncGeneratorStep (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/umzug/lib/migration.js:9:103)
+    at _next (/home/catalunha/myapp/cursojs/node/aula079api/node_modules/umzug/lib/migration.js:11:194)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+
+catalunha@pop-os:~/myapp/cursojs/node/aula079api$
+
+```
+
+# modificando uma tabela
+```
+$ npx sequelize migration:create --name=alunos-email-unique
+
+```
+editar a coluna e
+```
+$ npx sequelize db:migrate
+
+```
+
+# upload de arquivos
+
+```
+$ npm install multer
+```
+muito massa
+
+# criando relacionamento entre tabelas
+$ npx sequelize migration:create --name=alunos-foto
+criar tabela na ORM
+$ npx sequelize db:migrate
+
+
+# testes no servidor
+  users:
+  {
+    "id": 6,
+    "nome": "Ana",
+    "email": "ana@gmail.com"
+  },
+  senha:123456
